@@ -44,5 +44,9 @@ dev.log
 test
 
 server.log
-# Skills directory
-/skills/
+# Database
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+prisma/db/*.db
