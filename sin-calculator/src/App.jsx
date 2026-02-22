@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { AMAL_TYPE, calculateWeight } from './utils/amalHeuristics';
+import { AMAL_TYPE, calculateWeight, getRandomHadist } from './utils/amalHeuristics';
 import Header from './components/Header';
 import StatsBar from './components/StatsBar';
 import InputSection from './components/InputSection';
 import FintechSection from './components/FintechSection';
 import HistoryLog from './components/HistoryLog';
+import HadistModal from './components/HadistModal';
 
 export default function App() {
   const [surgaPercentage, setSurgaPercentage] = useState(50);
   const [history, setHistory] = useState([]);
   const [description, setDescription] = useState('');
+  const [hadistModal, setHadistModal] = useState({ isOpen: false, text: '' });
 
   const handleAddAmal = (type) => {
     if (!description.trim()) {
@@ -37,12 +39,19 @@ export default function App() {
 
     setHistory([newRecord, ...history]);
     setDescription(''); 
+
+    if (type === AMAL_TYPE.DOSA) {
+      setHadistModal({
+        isOpen: true,
+        text: getRandomHadist()
+      });
+    }
   };
 
   const nerakaPercentage = 100 - surgaPercentage;
 
   return (
-    <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-xl shadow-sm mx-auto grid grid-cols-1 md:grid-cols-2 overflow-hidden">
+    <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-xl shadow-sm mx-auto grid grid-cols-1 md:grid-cols-2 overflow-hidden relative">
       <div className="p-6 md:p-8 border-b md:border-b-0 md:border-r border-gray-200">
         <Header />
         <StatsBar 
@@ -59,6 +68,12 @@ export default function App() {
         <FintechSection />
         <HistoryLog history={history} />
       </div>
+
+      <HadistModal 
+        isOpen={hadistModal.isOpen} 
+        onClose={() => setHadistModal({ ...hadistModal, isOpen: false })} 
+        hadist={hadistModal.text} 
+      />
     </div>
   );
 }
